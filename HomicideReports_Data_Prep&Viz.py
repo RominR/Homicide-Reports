@@ -5,6 +5,7 @@ Created on Thu Feb 24 08:27:40 2022
 
 @author: rominrajbhandari
 """
+#Let us first import the libraries that are required.
 
 #standard libraries
 import pandas as pd
@@ -23,37 +24,14 @@ import matplotlib.pyplot as plt
 #setting directory
 import os
 os.getcwd()
-os.chdir('/Users/romin/Library/Mobile Documents/com~apple~CloudDocs/Python/Python_Bootcamp_10-7-2020/Datasets')
+os.chdir('/Users/romin/Library/Datasets')
 
 #datetime
 import datetime
 
 #Regular expression
 import re
-
-#stock data
-import pandas_datareader
-from pandas_datareader import data as pwb
-
-#simpleimputer
-from sklearn.impute import SimpleImputer
-
-#KNNImputer
-from sklearn.impute import KNNImputer
-
-#Label Encoding or One Hot Encoding
-from sklearn.preprocessing import LabelEncoder
-
-#For Excel Files
-import xlrd # xlrd is a library for reading data and formatting information from Excel files in the historical .xls format.
-import openpyxl #openpyxl is a Python library to read/write Excel 2010 xlsx/xlsm/xltx/xltm files.
-import xlwings #xlwings is a Python library that makes it easy to call Python from Excel and vice versa. It works with Excel on Windows and macOS as well as with Google Sheets and Excel on the web.
-
-#grab data from the web(HTTP capabilities)
-import requests
-
-# We'll also use StringIO to work with the csv file, the DataFrame will require a .read() method
-from io import StringIO
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Reading the dataset
 #url = https://www.kaggle.com/murderaccountability/homicide-reports/code
@@ -136,6 +114,7 @@ data_check()
 
 #Find the distribution of total number of crime each year.
 sns.histplot(data = Homicide_Reports['Year'], kde = True)
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Find the total crime, total solved, unsolved crimes in each year and plot it in the graph.
 
@@ -164,6 +143,7 @@ sns.barplot(data = crime_unsolved, x = 'Year', y = 'Total_Crime_Unsolved', color
 ax1.set_xticklabels(ax1.get_xticklabels(), rotation = 60)
 plt.legend()
 #It looks like there is positive correlations between total crime and crime being solved/unsolved.
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Let us make the graph more easier to understand. But, first we need to concatenate the above 3 dataframes.
 df_concat = pd.concat([total_crime, crime_solved[['Total_Crime_Solved']], crime_unsolved[['Total_Crime_Unsolved']]], axis = 1)
@@ -182,9 +162,11 @@ sns.barplot(data = tidy, x = 'Value', y = 'Year', hue = 'Variable', orient = 'h'
 
 #Or we can also use matplotlib.
 df_concat.set_index('Year').plot(kind = 'barh', figsize = (10, 12))
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Plotting the agencies that were investigating in the crimes.
 Homicide_Reports['Agency Type'].value_counts().plot(kind = 'barh', color = ['r', 'g', 'c', 'b', 'y', 'black'])
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Plotting the types of crime commited and if that crime was solved or not. Also check if the perpetrator's race.
 Homicide_Reports['Crime Type'].unique() #Checking the unique values before performing the operations
@@ -194,6 +176,7 @@ Homicide_Reports['Perpetrator Race'].unique()
 #Now, plotting
 sns.catplot(data = Homicide_Reports, x = 'Crime Type', kind = 'count', hue = 'Crime Solved', col = 'Perpetrator Race', sharey = False)
 #From the plot, we can say that when the perpetrator race is 'Unknown', the crime is less likely to be solved.
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Let's find out which race group has been a victim the most.
 Homicide_Reports['Victim Race'].unique() #Checking the unique values before performing the operations
@@ -223,7 +206,7 @@ ax4.set_xticklabels(ax4.get_xticklabels(), rotation = 30)
 plt.show()
 
 #It looks like perpetrator kills the victims from same race more than any other.
-
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #It is time to find out if perpetrator and victims are from the same family.
 Homicide_Reports['Relationship'].unique()
@@ -235,6 +218,7 @@ ax4.set_xticklabels(ax4.get_xticklabels(), rotation = 90)
 plt.show()
 
 #If we discard 'Unknown' relationship, the people who know the perpetrator slightly have been the victim and also, the people who are stranger to the perpetrator have been murdered.
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Now, let us check that based on the perpetrator race, what is the perpetrator's relationship with the victim they murdered.
 plot = sns.countplot(data = Homicide_Reports, x = 'Perpetrator Race', hue = 'Relationship', palette = 'Paired',
@@ -246,11 +230,13 @@ plt.show()
 
 '''Looking at the white and black race, the top four victims killed by white race perpetrator are Acquaintance, Stranger, Unknown and Wife respectively,
 whereas, the top four victims killed by black race perpetrator are Acquaintance, Unknown, Stranger, and Friend.'''
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #What types of weapons were used to harm victims.
 Homicide_Reports.Weapon.unique() #Checking the unique values before performing the operations
 
 sns.countplot(data = Homicide_Reports, y = 'Weapon', palette = 'rainbow', order = Homicide_Reports['Weapon'].value_counts().index)
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Find the month that either solved or didn't solve the crime and if the victims in those crimes were male, female or unknown.
 
@@ -282,7 +268,7 @@ sns.catplot(data = Homicide_Reports, x = 'Crime Solved', order = ['Yes', 'No'],
             col = 'Month', col_order= month_to_num.keys(), col_wrap= 3, 
             hue = 'Victim Sex', kind = 'count', palette = 'Accent',
             aspect = 2, height = 4, sharey = False, sharex = False)
-
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #There are some people who are in the dataset, but it cannot be seen in the plot. Let's see what is going on.
 Homicide_Reports[Homicide_Reports['Victim Sex'] == 'Unknown'] #There are 984 Unknown victims. Let's see how they fall in each month.
@@ -292,7 +278,7 @@ sns.catplot(data = Homicide_Reports[Homicide_Reports['Victim Sex'] == 'Unknown']
             col_wrap= 4, kind = 'count', palette = 'Accent', aspect = 1, height = 4, sharex = False, sharey = False)
 
 #In every month from whole 34 years, it applear that when the victim sex is unknown, the rate of crime not being solved is higher.
-
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Let's see the 'Text tables' for the above solution
 Homicide_Reports.groupby(['Month', 'Crime Solved', 'Victim Sex'])['Crime Solved'].count().sort_index(level = 0).head(20)
@@ -301,6 +287,7 @@ Homicide_Reports.groupby(['Month In Number', 'Crime Solved', 'Victim Sex'])[['Cr
 
 #Moving all the indexes in the column and storing them into 'df' variable.
 df = Homicide_Reports.groupby(['Month', 'Crime Solved', 'Victim Sex'])[['Crime Solved']].count().rename(columns = {'Crime Solved': 'Total'}).reset_index()
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Finding the max number of female murdered.
 df[(df['Victim Sex'] == 'Female')]['Total'].max()
@@ -313,8 +300,7 @@ df[df['Victim Sex'] == 'Male']['Total'].max()
 
 #Finding the month where those max number of male murdered and if there crime was solved. Note that this number for month of July is from whole 34 years.
 df[df['Total'] == 31639]
-
-#Let's detect possible pattern in Crime.
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Using pairplt, lets pair the columns below with each other in the plot.
 df = Homicide_Reports[['Record ID', 'Year', 'Incident', 'Victim Age', 'Victim Count', 'Perpetrator Count']]
@@ -322,21 +308,13 @@ df = Homicide_Reports[['Record ID', 'Year', 'Incident', 'Victim Age', 'Victim Co
 sns.pairplot(df)
 plt.title('Homicide Crimes During 1980-2014')
 plt.show()
-
-''''#Describe function give all the aggregate values. let's plot them
-df.describe()
-
-df.describe().plot()
-
-#Total crime commited from 1980 to 2014
-Homicide_Reports['Incident'].sum()
- 
-#There were 14.663963 million crimes commited from 1980 to 2014.'''
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #let us the connection between Perpetrator Count and Victim Count
 sns.scatterplot(data = Homicide_Reports, x = 'Victim Count', y = 'Perpetrator Count')
 
 #This is suprising outcome. As the perpetrator decreases victim count decrease.
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Let us analyze the total crime solve/unsolved per year.
 crime_solved_count = Homicide_Reports.groupby(['Year', 'Crime Solved'])[['Incident']].sum().reset_index()
@@ -344,6 +322,7 @@ crime_solved_count.info()
 sns.scatterplot(data = crime_solved_count, x = 'Year', y = 'Incident', hue = 'Crime Solved')
 
 #It looks like as the world enters to the advancement of new technology, there is higher chances of solving the crime.
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Finding total incident per year.
 plt.figure(figsize = (10, 8))
@@ -360,6 +339,8 @@ If we can see from 1991 to 1999, the crime rate was decreasing in good rate. It 
 because the country had a good financial stability or maybe there was an effective governing
 bodies who applied strict rules to prevent such crimes.
 '''
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 #Let's find out the State Wide Crime rate.
 Homicide_Reports[['State', 'Incident']]
 order = Homicide_Reports.groupby('State')['Incident'].sum().sort_values(ascending = False).index
@@ -372,7 +353,7 @@ plt.show()
 
 #Checking if the above plot is matching with the text table below.
 Homicide_Reports.groupby('State')['Incident'].sum().sort_values(ascending = False)
-
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Saving this cleaned dataframe to csv
 Homicide_Reports.to_csv(r'/Users/romin/Library/Mobile Documents/com~apple~CloudDocs/Python/Python_Bootcamp_10-7-2020/Datasets/Homicide_CleanDataset.csv',
